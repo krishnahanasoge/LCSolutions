@@ -5,23 +5,21 @@ import java.util.*;
 public class CoinChange {
     static Map<Pair<Integer,Integer>,Long> memo = new HashMap<>();
     public static void main(String[] args) {
-        int[] input = {186,419,83,408};
-        coinChange(input, 6249);
+        int[] input = {1,2,5};
+        coinChange(input, 11);
     }
 
 
     public static int coinChange(int[] coins, int amount) {
-        List<Integer> coinsList = new ArrayList<>();
-        for(int i : coins){
-            coinsList.add(i);
+        int[] dp = new int[amount+1];
+        Arrays.fill(dp, amount+1);
+        dp[0] = 0;
+        for(int i=1;i<=amount;i++){
+            for(int j=0;j<coins.length;j++){
+                dp[i] = Math.min(1+dp[i-coins[j]],dp[i]);
+            }
         }
-        Collections.sort(coinsList);
-        long result = coinChange(coinsList, amount, coinsList.size()-1);
-        if(result != Integer.MAX_VALUE){
-            return ((Long)result).intValue();
-        }else{
-            return -1;
-        }
+        return dp[dp.length-1];
     }
 
     public static long coinChange(List<Integer> coins, long amount, int fromIndex) {
